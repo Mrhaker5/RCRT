@@ -1,3 +1,6 @@
+
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { emergencyCases, ambulanceDispatches, ambulanceProviders, hospitals, caseActivityLogs } from "@/db/schema";
