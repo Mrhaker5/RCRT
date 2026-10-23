@@ -1,23 +1,19 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import * as schema from './schema';
 
-const databaseUrl = process.env.DATABASE_URL;
+type DB = any;
 
-process.env.DATABASE_URL ||
-"postgresql://postgres:postgres@localhost:5432/postgres"
+let db: DB;
 
-const globalForDb = globalThis as typeof globalThis & {
-  __arenaNextJsPostgresqlPool?: Pool;
-};
-
-export const pool =
-  globalForDb.__arenaNextJsPostgresqlPool ??
-  new Pool({
-    connectionString: databaseUrl,
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForDb.__arenaNextJsPostgresqlPool = pool;
+if (process.env.DATABASE_URL) {
+  const { neon } = require('@neondatabase/serverless');
+  const { drizzle } = require('drizzle-orm/neon-http');
+  const sql = neon(process.env.DATABASE_URL);
+  db = drizzle(sql, { schema });
+} else {
+  const { neon } = require('@neondatabase/serverless');
+  const { drizzle } = require('drizzle-orm/neon-http');
+  const sql = neon('postgres://placeholder:localhost:5432/postgres');
+  db = drizzle(sql, { schema });
 }
 
-export const db = drizzle(pool);
+export { db };
