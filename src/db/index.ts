@@ -3,9 +3,8 @@ import { Pool } from "pg";
 
 const databaseUrl = process.env.DATABASE_URL;
 
-if (!databaseUrl) {
-  (process.env.DATABASE_URL || "postgresql://user:pass@localhost:5432/db")
-}
+process.env.DATABASE_URL ||
+"postgresql://postgres:postgres@localhost:5432/postgres"
 
 const globalForDb = globalThis as typeof globalThis & {
   __arenaNextJsPostgresqlPool?: Pool;
